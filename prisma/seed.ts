@@ -35,7 +35,8 @@ async function main() {
   await prisma.user.upsert({
     where: { username: "admin" },
     create: { name: "Admin", username: "admin", email, role: "SUPER_ADMIN", passwordHash: await bcrypt.hash(pw, 10) },
-    update: {},
+    // RESET_ADMIN_PASSWORD=1 ho to har build par admin ka password SEED_ADMIN_PASSWORD par reset hoga
+    update: process.env.RESET_ADMIN_PASSWORD === "1" ? { role: "SUPER_ADMIN", active: true, tokenVersion: { increment: 1 }, passwordHash: await bcrypt.hash(pw, 10) } : {},
   });
   console.log(`✓ Seed ho gaya. Login: ${email} / ${pw}  (turant password badlein)`);
 }
