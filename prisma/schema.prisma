@@ -1,0 +1,378 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  MANAGER
+  ZM
+  AGENT
+  VIEWER
+  DEALER
+}
+
+enum WorkMode {
+  OFFICE
+  WFH
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String
+  username      String    @unique
+  email         String?   @unique
+  phone         String?
+  passwordHash  String
+  role          Role      @default(AGENT)
+  active        Boolean   @default(true)
+  permissions   Json      @default("{}") // { "orders.view": true, "page./crm/reports": true, ... }
+  workMode      WorkMode  @default(OFFICE) // incentive formula
+  extension     String? // Airtel IQ extension
+  tokenVersion  Int       @default(0) // Force Logout ke liye
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  ownedOrders   Order[]   @relation("LeadOwner")
+  zmDealers     Dealer[]  @relation("DealerZM")
+  dealer        Dealer?   @relation("DealerLogin")
+  notes         Note[]
+  audits        AuditLog[]
+  calls         CallLog[]
+}
+
+model Source {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  stores    StoreMapping[]
+}
+
+model StoreMapping {
+  id        Int    @id @default(autoincrement())
+  storeKey  String @unique // jaise "mystore.com"
+  source    Source @relation(fields: [sourceId], references: [id])
+  sourceId  Int
+}
+
+model StatusMaster {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  color     String  @default("slate")
+  terminal  Boolean @default(false) // follow-up band ho jata hai
+  revenue   Boolean @default(false) // Delivered / GPO Delivered
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model FollowupRule {
+  id        Int    @id @default(autoincrement())
+  status    String @unique
+  afterDays Int    @default(1)
+}
+
+model Setting {
+  key   String @id
+  value Json
+}
+
+model Product {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  hsn       String?
+  price     Float   @default(0)
+  active    Boolean @default(true)
+}
+
+model State {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  districts District[]
+}
+
+model District {
+  id      Int    @id @default(autoincrement())
+  name    String
+  state   State  @relation(fields: [stateId], references: [id])
+  stateId Int
+
+  @@unique([stateId, name])
+}
+
+model Order {
+  id               Int       @id @default(autoincrement())
+  orderNo          String    @unique
+  customerName     String
+  phone            String
+  altPhone         String?
+  email            String?
+  product          String
+  extra            String?
+  qty              Int       @default(1)
+  unitPrice        Float     @default(0)
+  total            Float     @default(0)
+  online           Float     @default(0)
+  balance          Float     @default(0) // COD collectable
+  paymentMode      String    @default("COD") // COD | Prepaid | Partial
+  paymentStatus    String    @default("Pending") // Pending | Completed
+  address          String?
+  pincode          String?
+  city             String?
+  state            String?
+  district         String?
+  source           String    @default("Orders")
+  storeKey         String?
+  status           String    @default("New")
+  remark           String?
+  followupAt       DateTime?
+
+  leadOwner        User?     @relation("LeadOwner", fields: [leadOwnerId], references: [id])
+  leadOwnerId      Int?
+  agentAssignedAt  DateTime?
+  recycled         Boolean   @default(false)
+  lastHumanWorkAt  DateTime?
+
+  dealer           Dealer?   @relation(fields: [dealerId], references: [id])
+  dealerId         Int?
+  dealerAssignedAt DateTime?
+  dealerMargin     Float?
+
+  // Shipping (Shiprocket / India Post)
+  courier          String? // "India Post" ya Shiprocket courier naam
+  carrier          String? // SHIPROCKET | INDIAPOST
+  awb              String?
+  shipStatus       String? // Shiprocket status / India Post event
+  shipOrderId      String?
+  shipmentId       String?
+  labelUrl         String?
+  labelPrinted     Boolean   @default(false)
+  manifestDone     Boolean   @default(false)
+  bookedAt         DateTime?
+  deliveredAt      DateTime?
+  lastShipEventAt  DateTime?
+
+  statusChangedAt  DateTime  @default(now())
+  statusChangedById Int?
+  statusChangedBy  String? // "self" | "other" | "system"
+
+  deletedAt        DateTime?
+  deletedReason    String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  history          OrderHistory[]
+  notes            Note[]
+  calls            CallLog[]
+
+  @@index([status])
+  @@index([phone])
+  @@index([createdAt])
+  @@index([leadOwnerId])
+  @@index([dealerId])
+  @@index([awb])
+}
+
+model OrderHistory {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  field     String // status | leadOwner | dealer | followup | remark | edit
+  oldValue  String?
+  newValue  String?
+  byUserId  Int?
+  byName    String?
+  system    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  phone     String // shared customer notes (same phone ke sabhi orders)
+  text      String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+}
+
+model Dealer {
+  id             Int       @id @default(autoincrement())
+  code           String    @unique // PHD0001
+  name           String
+  username       String?   @unique
+  firmName       String?
+  contactPerson  String?
+  mobile         String?
+  altMobile      String?
+  email          String?
+  gst            String?
+  pan            String?
+  address        String?
+  city           String?
+  pincode        String?
+  territory      String?
+  state          String?
+  district       String?
+  creditLimit    Float?
+  openingStock   Int?
+  defaultMargin  Float     @default(0) // ₹ per order (dealer rakhta hai)
+  minStock       Int       @default(20)
+  notes          String?
+  active         Boolean   @default(true)
+  zm             User?     @relation("DealerZM", fields: [zmId], references: [id])
+  zmId           Int?
+  loginUser      User?     @relation("DealerLogin", fields: [loginUserId], references: [id])
+  loginUserId    Int?      @unique
+  createdAt      DateTime  @default(now())
+
+  orders         Order[]
+  ledger         LedgerEntry[]
+  invoices       Invoice[]
+  territories    DealerTerritory[]
+}
+
+model DealerTerritory {
+  id        Int    @id @default(autoincrement())
+  dealer    Dealer @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  dealerId  Int
+  level     String // STATE | DISTRICT | CITY | PINCODE
+  value     String
+  priority  Int    @default(1)
+}
+
+model LedgerEntry {
+  id         Int      @id @default(autoincrement())
+  dealer     Dealer   @relation(fields: [dealerId], references: [id])
+  dealerId   Int
+  date       DateTime @default(now())
+  type       String // PAYMENT | SALE | ADJUST | STOCK
+  particular String
+  debit      Float    @default(0)
+  credit     Float    @default(0)
+  mode       String?
+  refNo      String?
+  createdBy  Int?
+  createdAt  DateTime @default(now())
+}
+
+model Invoice {
+  id          Int           @id @default(autoincrement())
+  invoiceNo   String        @unique // PH-DLR-0001
+  date        DateTime      @default(now())
+  dealer      Dealer        @relation(fields: [dealerId], references: [id])
+  dealerId    Int
+  paymentMode String        @default("Bank Transfer")
+  paidAmount  Float         @default(0)
+  discount    Float         @default(0)
+  subTotal    Float         @default(0)
+  gstAmount   Float         @default(0)
+  grandTotal  Float         @default(0)
+  status      String        @default("Pending") // Pending | Partial | Paid
+  notes       String?
+  createdAt   DateTime      @default(now())
+  items       InvoiceItem[]
+}
+
+model InvoiceItem {
+  id        Int     @id @default(autoincrement())
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId Int
+  product   String
+  hsn       String?
+  qty       Float
+  rate      Float
+  gstRate   Float   @default(0)
+  amount    Float
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  module    String // security | data | shipping | settings
+  action    String // order.update, auth.login ...
+  target    String?
+  meta      Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model CallLog {
+  id          Int      @id @default(autoincrement())
+  callId      String   @unique
+  startedAt   DateTime
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      Int?
+  customerNo  String
+  order       Order?   @relation(fields: [orderId], references: [id])
+  orderId     Int?
+  direction   String // OUTBOUND | INBOUND
+  result      String // Answered | Attempted | Missed | Voicemail
+  durationSec Int      @default(0)
+  recordingUrl String?
+  statusAfter String?
+
+  @@index([startedAt])
+  @@index([customerNo])
+}
+
+model ShiprocketAccount {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String
+  password       String // encrypted rakhein production me
+  pickupLocation String   @default("Primary")
+  sandbox        Boolean  @default(false)
+  active         Boolean  @default(false)
+  token          String?
+  tokenAt        DateTime?
+  createdAt      DateTime @default(now())
+}
+
+model ShipEvent {
+  id        Int      @id @default(autoincrement())
+  carrier   String // SHIPROCKET | INDIAPOST
+  awb       String
+  event     String
+  location  String?
+  raw       Json?
+  at        DateTime @default(now())
+
+  @@index([awb])
+}
+
+model WalletEntry {
+  id        Int      @id @default(autoincrement())
+  carrier   String   @default("INDIAPOST")
+  type      String // RECHARGE | DEBIT | ADJUST
+  amount    Float
+  note      String?
+  awb       String?
+  at        DateTime @default(now())
+}
+
+// India Post article numbers (Barcode / Article Manager)
+model Barcode {
+  id        Int       @id @default(autoincrement())
+  articleNo String    @unique
+  used      Boolean   @default(false)
+  orderId   Int?
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
