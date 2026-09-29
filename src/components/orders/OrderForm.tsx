@@ -140,36 +140,10 @@ export default function OrderForm({ id }: { id?: number }) {
                 <textarea className="input" rows={2} value={f.remark} onChange={(e) => set("remark", e.target.value)} /></div>
             </div>
           </div>
-
-          <div className="card !p-0">
-            <div className="rounded-t-2xl bg-gradient-to-r from-emerald-600 to-green-500 px-4 py-3 font-semibold text-white">💰 Payment Information</div>
-            <div className="grid gap-4 p-4 md:grid-cols-2">
-              {Field({ k: "unitPrice", label: "Unit Price (Rs)", type: "number" })}
-              {Field({ k: "total", label: "Total Amount (Rs)", type: "number", ph: `auto: ${autoTotal}` })}
-              {Field({ k: "online", label: "Online Payment Received (Rs)", type: "number" })}
-              <div className="pl-3"><label className="label">Balance / COD Collectable</label><div className="text-2xl font-bold text-green-700">Rs {balance}</div></div>
-              <div className="pl-3"><label className="label">Payment Mode</label>
-                <select className="input" value={f.paymentMode} onChange={(e) => set("paymentMode", e.target.value)}>{["COD", "Prepaid", "Partial"].map((x) => <option key={x}>{x}</option>)}</select></div>
-              <div className="pl-3"><label className="label">Payment Status</label>
-                <select className="input" value={f.paymentStatus} onChange={(e) => set("paymentStatus", e.target.value)}>{["Pending", "Completed"].map((x) => <option key={x}>{x}</option>)}</select></div>
-            </div>
-          </div>
-
-          <div className="card !p-0">
-            <div className="rounded-t-2xl bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-3 font-semibold text-white">💼 Lead Assignment</div>
-            <div className="grid gap-4 p-4 md:grid-cols-2">
-              <div><label className="label">Lead Owner (assign / change)</label>
-                <select className="input" value={f.leadOwnerId} disabled={!canM(meta, "orders.assignOwner")} onChange={(e) => set("leadOwnerId", e.target.value)}>
-                  <option value="">Not assigned</option>{meta?.agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
-              <div><label className="label">Dealer (optional)</label>
-                <select className="input" value={f.dealerId} disabled={!canM(meta, "orders.assignDealer")} onChange={(e) => set("dealerId", e.target.value)}>
-                  <option value="">No dealer</option>{meta?.dealers.map((d) => <option key={d.id} value={d.id}>{d.name} ({d.city || "-"})</option>)}</select></div>
-            </div>
-          </div>
         </div>
 
-        {full && (
-          <div className="space-y-4">
+        <div className="space-y-4">
+          {full && (<>
             <div className="card">
               <h3 className="mb-2 font-semibold">🚚 Shipping</h3>
               {full.awb ? (
@@ -217,8 +191,34 @@ export default function OrderForm({ id }: { id?: number }) {
                 ))}
               </div>
             </div>
+          </>)}
+
+          <div className="card !p-0">
+            <div className="rounded-t-2xl bg-gradient-to-r from-emerald-600 to-green-500 px-4 py-3 font-semibold text-white">💰 Payment Information</div>
+            <div className="grid grid-cols-2 gap-3 p-4">
+              {Field({ k: "unitPrice", label: "Unit Price (Rs)", type: "number" })}
+              {Field({ k: "total", label: "Total Amount (Rs)", type: "number", ph: `auto: ${autoTotal}` })}
+              {Field({ k: "online", label: "Online Payment Received (Rs)", type: "number" })}
+              <div className="pl-3"><label className="label">Balance / COD Collectable</label><div className="text-2xl font-bold text-green-700">Rs {balance}</div></div>
+              <div className="pl-3"><label className="label">Payment Mode</label>
+                <select className="input" value={f.paymentMode} onChange={(e) => set("paymentMode", e.target.value)}>{["COD", "Prepaid", "Partial"].map((x) => <option key={x}>{x}</option>)}</select></div>
+              <div className="pl-3"><label className="label">Payment Status</label>
+                <select className="input" value={f.paymentStatus} onChange={(e) => set("paymentStatus", e.target.value)}>{["Pending", "Completed"].map((x) => <option key={x}>{x}</option>)}</select></div>
+            </div>
           </div>
-        )}
+
+          <div className="card !p-0">
+            <div className="rounded-t-2xl bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-3 font-semibold text-white">💼 Lead Assignment</div>
+            <div className="grid gap-3 p-4">
+              <div><label className="label">Lead Owner (assign / change)</label>
+                <select className="input" value={f.leadOwnerId} disabled={!canM(meta, "orders.assignOwner")} onChange={(e) => set("leadOwnerId", e.target.value)}>
+                  <option value="">Not assigned</option>{meta?.agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></div>
+              <div><label className="label">Dealer (optional)</label>
+                <select className="input" value={f.dealerId} disabled={!canM(meta, "orders.assignDealer")} onChange={(e) => set("dealerId", e.target.value)}>
+                  <option value="">No dealer</option>{meta?.dealers.map((d) => <option key={d.id} value={d.id}>{d.name} ({d.city || "-"})</option>)}</select></div>
+            </div>
+          </div>
+        </div>
       </div>
       {book && id && full && <BookModal orderId={id} orderNo={full.orderNo} carrier={book} onClose={() => setBook(null)} onDone={() => { setBook(null); load(); }} />}
     </div>
