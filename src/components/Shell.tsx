@@ -84,7 +84,7 @@ export default function Shell({ brand, user, nav, children }: {
 
       {pwOpen && <ChangePassword onClose={() => setPwOpen(false)} />}
       <div className={pinned ? "lg:pl-72" : ""}>
-        <main className="mx-auto max-w-[1600px] p-4 md:p-6">{children}</main>
+        <main className="w-full p-4 md:p-6">{children}</main>
       </div>
     </div>
   );
