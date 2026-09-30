@@ -200,7 +200,8 @@ export default function OrdersClient() {
           <tbody>
             {data?.rows.map((r) => (
               <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/40">
-                <td><input type="checkbox" checked={sel.has(r.id)} onChange={(e) => { const s = new Set(sel); if (e.target.checked) s.add(r.id); else s.delete(r.id); setSel(s); setAllMatching(false); }} /></td>
+                <td><input type="checkbox" checked={sel.has(r.id)} onChange={(e) => { const s = new Set(sel); if (e.target.checked) s.add(r.id); else s.delete(r.id); setSel(s); setAllMatching(false); }} />
+                  {canM(meta, "orders.delete") && <button title="Order delete karein" aria-label="Delete order" className="ml-2 text-red-600 hover:text-red-800" onClick={() => del(r)}>🗑</button>}</td>
                 <td><Link href={`/crm/orders/${r.id}`} className="font-semibold text-blue-600 hover:underline">{r.orderNo}</Link></td>
                 <td>{dt(r.createdAt)}</td>
                 <td><Link href={`/crm/orders/${r.id}`} className="font-medium">{r.customerName}</Link>{!r.leadOwner && <span className="ml-1 rounded bg-blue-100 px-1 text-[10px] text-blue-700">Lead</span>}</td>
