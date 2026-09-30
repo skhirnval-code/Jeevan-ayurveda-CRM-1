@@ -135,7 +135,7 @@ export default function OrdersClient() {
       </div>
 
       {showFilters && meta && (
-        <div className="card mb-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="card mb-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           <Sel label="Status" v={get("status")} on={(v) => setParams({ status: v })} opts={meta.statuses} />
           <Sel label="Source" v={get("source")} on={(v) => setParams({ source: v })} opts={meta.sources} />
           <Sel label="Payment" v={get("paymentStatus")} on={(v) => setParams({ paymentStatus: v })} opts={["Pending", "Completed"]} />
