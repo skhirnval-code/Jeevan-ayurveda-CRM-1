@@ -111,7 +111,7 @@ export default function OrdersClient() {
       <div className="mb-3 flex flex-wrap gap-2">
         {CHIPS.map((c) => (
           <button key={c.key} title={c.title} onClick={() => setParams({ chip: get("chip") === c.key ? null : c.key, tab: null })}
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${c.cls} ${get("chip") === c.key ? "ring-2 ring-slate-900" : ""}`}>
+            className={`rounded-lg px-3 py-1.5 text-base font-medium ${c.cls} ${get("chip") === c.key ? "ring-2 ring-slate-900" : ""}`}>
             {c.label} <b>{data?.chipCounts[c.key] ?? 0}</b>
             {c.key === "assignedToday" && data && <span className="ml-1 text-xs opacity-70">({Math.max(0, (data.chipCounts.assignedToday ?? 0) - data.assignedRe)} naye + {data.assignedRe} dubara)</span>}
           </button>
