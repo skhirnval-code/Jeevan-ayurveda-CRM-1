@@ -90,8 +90,8 @@ export default async function Dashboard({ searchParams: sp }: { searchParams: SP
       <RangeLinks base="/crm/dashboard" sp={sp} options={RANGES} />
       <div className="flex items-center gap-2 text-sm">
         <span className="text-slate-500">Numbers based on:</span>
-        <Link className={`btn btn-sm ${basis === "createdAt" ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/dashboard", sp, { basis: null })}>[D] Order Date</Link>
-        <Link className={`btn btn-sm ${basis !== "createdAt" ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/dashboard", sp, { basis: "S" })}>[S] Status Change Date</Link>
+        <Link className={`btn btn-sm ${basis === "createdAt" ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/dashboard", sp, { basis: null })}>[D] Order Date</Link>
+        <Link className={`btn btn-sm ${basis !== "createdAt" ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/dashboard", sp, { basis: "S" })}>[S] Status Change Date</Link>
       </div>
 
       <div className="grid gap-2 md:grid-cols-3">
