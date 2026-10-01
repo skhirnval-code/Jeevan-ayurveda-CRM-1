@@ -194,7 +194,7 @@ export default function OrderForm({ id }: { id?: number }) {
           </>)}
 
           <div className="card !p-0">
-            <div className="rounded-t-2xl bg-gradient-to-r from-emerald-600 to-green-500 px-4 py-3 font-semibold text-white">💰 Payment Information</div>
+            <div className="rounded-t-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3 font-semibold text-white">💰 Payment Information</div>
             <div className="grid grid-cols-2 gap-3 p-4">
               {Field({ k: "unitPrice", label: "Unit Price (Rs)", type: "number" })}
               {Field({ k: "total", label: "Total Amount (Rs)", type: "number", ph: `auto: ${autoTotal}` })}

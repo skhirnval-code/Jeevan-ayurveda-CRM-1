@@ -85,7 +85,7 @@ export default function OrdersClient() {
 
   return (
     <div>
-      {toast && <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg">{toast}</div>}
+      {toast && <div className="fixed bottom-4 right-4 z-50 rounded-lg bg-blue-700 px-4 py-2 text-sm text-white shadow-lg">{toast}</div>}
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div><h1 className="text-2xl font-bold">Manage Orders</h1><div className="text-slate-500">{data?.total ?? "…"} orders</div></div>
         <div className="flex flex-wrap gap-2">
@@ -111,7 +111,7 @@ export default function OrdersClient() {
       <div className="mb-3 flex flex-wrap gap-2">
         {CHIPS.map((c) => (
           <button key={c.key} title={c.title} onClick={() => setParams({ chip: get("chip") === c.key ? null : c.key, tab: null })}
-            className={`rounded-lg px-3 py-1.5 text-base font-medium ${c.cls} ${get("chip") === c.key ? "ring-2 ring-slate-900" : ""}`}>
+            className={`rounded-lg px-3 py-1.5 text-base font-medium ${c.cls} ${get("chip") === c.key ? "ring-2 ring-blue-600" : ""}`}>
             {c.label} <b>{data?.chipCounts[c.key] ?? 0}</b>
             {c.key === "assignedToday" && data && <span className="ml-1 text-xs opacity-70">({Math.max(0, (data.chipCounts.assignedToday ?? 0) - data.assignedRe)} naye + {data.assignedRe} dubara)</span>}
           </button>
@@ -130,7 +130,7 @@ export default function OrdersClient() {
         <div className="ml-auto flex flex-wrap gap-2">
           <Money icon="💳" label="ONLINE" v={data?.money.online} cls="from-blue-600 to-blue-500" />
           <Money icon="💵" label="COD" v={data?.money.cod} cls="from-amber-700 to-amber-500" />
-          <Money icon="🏆" label="INCENTIVE" v={data?.money.incentive} cls="from-green-800 to-green-600" />
+          <Money icon="🏆" label="INCENTIVE" v={data?.money.incentive} cls="from-blue-800 to-blue-600" />
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default function OrdersClient() {
             { v: "other", l: "-- KISI AUR ne badla (Lead Owner ne nahi) --" }, { v: "self", l: "-- Lead Owner ne KHUD badla --" }, { v: "system", l: "-- Webhook / Courier ne apne aap --" },
             ...meta.allUsers.filter((u) => u.role !== "DEALER").map((u) => ({ v: String(u.id), l: u.name }))]} />
           <div className="col-span-2 flex items-end gap-2">
-            <button className={`btn ${get("workedToday") ? "!bg-slate-900 !text-white" : ""}`} title="Aaj jin orders par kisi INSAAN ne manual kaam kiya (status/follow-up/remark/edit/booking). Webhook automatic badlav nahi gine jaate." onClick={() => setParams({ workedToday: get("workedToday") ? null : "1" })}>Aaj jin par kaam hua</button>
+            <button className={`btn ${get("workedToday") ? "!bg-blue-600 !text-white" : ""}`} title="Aaj jin orders par kisi INSAAN ne manual kaam kiya (status/follow-up/remark/edit/booking). Webhook automatic badlav nahi gine jaate." onClick={() => setParams({ workedToday: get("workedToday") ? null : "1" })}>Aaj jin par kaam hua</button>
             <button className="btn" onClick={() => router.replace(path)}>Clear</button>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function OrdersClient() {
 }
 
 function TabBtn({ active, onClick, cls, children }: { active: boolean; onClick: () => void; cls: string; children: React.ReactNode }) {
-  return <button onClick={onClick} className={`chip ${active ? "!border-slate-900 !bg-slate-900 !text-white" : cls || "border-slate-300 bg-white"}`}>{children}</button>;
+  return <button onClick={onClick} className={`chip ${active ? "!border-blue-600 !bg-blue-600 !text-white" : cls || "border-slate-300 bg-white"}`}>{children}</button>;
 }
 
 function Money({ icon, label, v, cls }: { icon: string; label: string; v?: number; cls: string }) {
@@ -302,7 +302,7 @@ function Multi({ label, empty, options, value, onChange, multi, title }: {
           {options.map((o) => {
             const on = cur.includes(o.value);
             return (
-              <button key={o.value} className={`block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 ${on ? "font-semibold text-green-700" : ""}`}
+              <button key={o.value} className={`block w-full rounded px-2 py-1.5 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 ${on ? "font-semibold text-blue-700" : ""}`}
                 onClick={() => {
                   if (multi) { const n = on ? cur.filter((x) => x !== o.value) : [...cur, o.value]; onChange(n.length ? n.join(",") : null); }
                   else { onChange(on ? null : o.value); setOpen(false); }
@@ -323,7 +323,7 @@ function BulkBar({ meta, count, total, allMatching, onSelectAll, onClear, run }:
   const [status, setStatus] = useState(""); const [remark, setRemark] = useState("");
   const [owner, setOwner] = useState(""); const [dealer, setDealer] = useState("");
   return (
-    <div className="card mb-3 flex flex-wrap items-center gap-2 border-green-300 bg-green-50 dark:bg-green-950/30">
+    <div className="card mb-3 flex flex-wrap items-center gap-2 border-blue-300 bg-blue-50 dark:bg-blue-950/30">
       <b>{count} selected</b>
       {!allMatching && <button className="btn btn-sm" onClick={onSelectAll}>Select all {total} matching</button>}
       {canM(meta, "orders.status") && <>
