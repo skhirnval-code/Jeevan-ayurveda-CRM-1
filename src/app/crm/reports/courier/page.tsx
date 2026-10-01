@@ -72,9 +72,9 @@ export default async function CourierPerformance({ searchParams: sp }: { searchP
       <PageHead title="🚚 Courier Performance" sub="Booking-window ke aadhar par tulna · sirf matured parcel par percentage · dono courier ek jaisi shart par" />
       <Section title="📊 Cohort Tulna" right={
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span>Window:</span>{[7, 15, 30, 60, 90].map((w) => <Link key={w} href={qs("/crm/reports/courier", sp, { w: String(w) })} className={`btn btn-sm ${win === w ? "!bg-slate-900 !text-white" : ""}`}>{w}d</Link>)}
+          <span>Window:</span>{[7, 15, 30, 60, 90].map((w) => <Link key={w} href={qs("/crm/reports/courier", sp, { w: String(w) })} className={`btn btn-sm ${win === w ? "!bg-blue-600 !text-white" : ""}`}>{w}d</Link>)}
           <span>Matured:</span>
-          {[5, 7, 10, 12, 15, 20].map((m) => <Link key={m} href={qs("/crm/reports/courier", sp, { m: String(m) })} className={`btn btn-sm ${mat === m ? "!bg-slate-900 !text-white" : ""}`}>{m} din</Link>)}
+          {[5, 7, 10, 12, 15, 20].map((m) => <Link key={m} href={qs("/crm/reports/courier", sp, { m: String(m) })} className={`btn btn-sm ${mat === m ? "!bg-blue-600 !text-white" : ""}`}>{m} din</Link>)}
         </div>
       }>
         <p className="mb-3 text-sm text-slate-500">{fmtDate(from)} se aaj tak BOOK hue parcel · Percentage sirf {mat}+ din purane (matured) parcel par bani hai.</p>
