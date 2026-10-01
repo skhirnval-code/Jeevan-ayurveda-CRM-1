@@ -20,7 +20,7 @@ export default async function Audit({ searchParams: sp }: { searchParams: SP }) 
   return (
     <div className="space-y-4">
       <PageHead title="Audit Logs" sub={`${total} entries`}><a className="btn" href={`/api/audit/export?${new URLSearchParams(Object.entries(f).filter(([, v]) => v) as [string, string][])}`}>Export CSV</a></PageHead>
-      <div className="flex flex-wrap gap-2">{TABS.map(([k, l]) => <Link key={k} href={qs("/crm/audit", sp, { module: k, page: null })} className={`btn btn-sm ${(f.module || "") === k ? "!bg-slate-900 !text-white" : ""}`}>{l}</Link>)}</div>
+      <div className="flex flex-wrap gap-2">{TABS.map(([k, l]) => <Link key={k} href={qs("/crm/audit", sp, { module: k, page: null })} className={`btn btn-sm ${(f.module || "") === k ? "!bg-blue-600 !text-white" : ""}`}>{l}</Link>)}</div>
       <form className="card grid grid-cols-2 gap-3 md:grid-cols-6" action="/crm/audit">
         {f.module && <input type="hidden" name="module" value={f.module} />}
         <div><label className="label">From</label><input type="date" name="from" defaultValue={f.from} className="input" /></div>
