@@ -19,7 +19,7 @@ export default async function Cumulative({ searchParams: sp }: { searchParams: S
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div><div className="text-xs font-bold text-green-700">{BRAND.toUpperCase()}</div><h1 className="text-2xl font-bold">Dealer Cumulative Report</h1><p className="text-sm text-slate-500">Dealer Sale / Commission / Net Sale / Paid / Balance ek jagah.</p></div>
+        <div><div className="text-xs font-bold text-blue-700">{BRAND.toUpperCase()}</div><h1 className="text-2xl font-bold">Dealer Cumulative Report</h1><p className="text-sm text-slate-500">Dealer Sale / Commission / Net Sale / Paid / Balance ek jagah.</p></div>
         <a className="btn" href={`/api/dealers/cumulative?${new URLSearchParams({ range: rk, from: sp1(sp, "from") || "", to: sp1(sp, "to") || "", q: sp1(sp, "q") || "" })}`}>Export CSV</a>
       </div>
       <div className="text-sm text-slate-500">DATE RANGE: {r.gte ? toYMD(r.gte) : "shuru"} to {r.lt ? toYMD(addDays(r.lt, -1)) : "aaj"} · Report lines: {shown.length}</div>
@@ -31,14 +31,14 @@ export default async function Cumulative({ searchParams: sp }: { searchParams: S
         <Stat label="TOTAL BALANCE" value={rupee(t.bal)} sub="Net sale minus paid" tone="red" />
       </div>
       <form className="card flex flex-wrap items-end gap-2" action="/crm/dealers/cumulative">
-        <div className="flex gap-1">{[["today", "Today"], ["all", "All Dates"], ["custom", "Custom"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${rk === k ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/dealers/cumulative", sp, { range: k })}>{l}</Link>)}</div>
+        <div className="flex gap-1">{[["today", "Today"], ["all", "All Dates"], ["custom", "Custom"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${rk === k ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/dealers/cumulative", sp, { range: k })}>{l}</Link>)}</div>
         <input type="hidden" name="range" value="custom" /><input type="hidden" name="view" value={view} />
         <div><label className="label">From Date</label><input type="date" name="from" defaultValue={sp1(sp, "from")} className="input" /></div>
         <div><label className="label">To Date</label><input type="date" name="to" defaultValue={sp1(sp, "to")} className="input" /></div>
         <div><label className="label">Dealer Search</label><input name="q" defaultValue={sp1(sp, "q")} placeholder="Search dealer name or code..." className="input" /></div>
         <button className="btn-primary">Search</button><Link className="btn" href="/crm/dealers/cumulative">Reset</Link>
       </form>
-      <div className="flex gap-2">{[["summary", "Summary"], ["status", "Status-wise"], ["stock", "Stock / Recovery / Profit"]].map(([k, l]) => <Link key={k} className={`btn ${view === k ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/dealers/cumulative", sp, { view: k })}>{l}</Link>)}</div>
+      <div className="flex gap-2">{[["summary", "Summary"], ["status", "Status-wise"], ["stock", "Stock / Recovery / Profit"]].map(([k, l]) => <Link key={k} className={`btn ${view === k ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/dealers/cumulative", sp, { view: k })}>{l}</Link>)}</div>
       <Section title={`Dealer Cumulative Report · Showing ${shown.length} dealers`}>
         <div className="overflow-x-auto"><table className="tbl">
           {view === "summary" && <>
