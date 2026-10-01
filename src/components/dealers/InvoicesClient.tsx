@@ -21,7 +21,7 @@ export default function InvoicesClient() {
         {canM(meta, "masters.edit") && <button className="btn-primary" onClick={() => setEdit("new")}>+ New Invoice</button>}
       </div>
       <div className="card mb-3 flex flex-wrap items-end gap-2">
-        <button className={`btn ${f.range === "today" ? "!bg-slate-900 !text-white" : ""}`} onClick={() => setF({ range: f.range === "today" ? "" : "today", from: "", to: "" })}>Aaj</button>
+        <button className={`btn ${f.range === "today" ? "!bg-blue-600 !text-white" : ""}`} onClick={() => setF({ range: f.range === "today" ? "" : "today", from: "", to: "" })}>Aaj</button>
         <div><label className="label">From</label><input type="date" className="input" value={f.from} onChange={(e) => setF({ ...f, range: "", from: e.target.value })} /></div>
         <div><label className="label">To</label><input type="date" className="input" value={f.to} onChange={(e) => setF({ ...f, range: "", to: e.target.value })} /></div>
         <span className="ml-auto text-sm text-slate-500">{rows.length} invoice</span>
