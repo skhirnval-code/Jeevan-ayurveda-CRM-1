@@ -73,7 +73,7 @@ export default async function ShiprocketPage({ searchParams: sp }: { searchParam
       <Section title="📦 Shipment Operations" right={
         <div className="flex items-center gap-2 text-sm">
           <span>DELIVERED {booked ? ((delivered / booked) * 100).toFixed(2) : "0.00"}%</span><span>RTO {booked ? ((rto / booked) * 100).toFixed(2) : "0.00"}%</span>
-          {[["today", "Aaj"], ["7d", "7 din"], ["30d", "30 din"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${(sp1(sp, "range") || "today") === k ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/shiprocket", sp, { range: k })}>{l}</Link>)}
+          {[["today", "Aaj"], ["7d", "7 din"], ["30d", "30 din"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${(sp1(sp, "range") || "today") === k ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/shiprocket", sp, { range: k })}>{l}</Link>)}
         </div>
       }>
         <div className="grid grid-cols-3 gap-2 md:grid-cols-6">
@@ -87,14 +87,14 @@ export default async function ShiprocketPage({ searchParams: sp }: { searchParam
 
       <Section title="⏳ Atke hue shipment">
         <p className="mb-2 text-sm text-slate-500">Vaada-tarikh nikal chuki hai ya 3+ din se koi khabar nahi aayi. Wapas aa rahe parcel ka paisa isme nahi gina. COD phansa: <b>{rupee(codStuck)}</b></p>
-        <div className="mb-2 flex flex-wrap gap-2">{B.map(([k, l]) => <Link key={k} href={qs("/crm/shiprocket", sp, { sb: k })} className={`btn btn-sm ${sb === k ? "!bg-slate-900 !text-white" : ""}`}><b>{cnt(k)}</b> {l}</Link>)}</div>
+        <div className="mb-2 flex flex-wrap gap-2">{B.map(([k, l]) => <Link key={k} href={qs("/crm/shiprocket", sp, { sb: k })} className={`btn btn-sm ${sb === k ? "!bg-blue-600 !text-white" : ""}`}><b>{cnt(k)}</b> {l}</Link>)}</div>
         <Table head={["Order", "Grahak", "Kahan atka / kya karein", "COD", "Late", "Chup", "Action"]} rows={stuckShown.slice(0, 200).map((o) => [
           <Link key="o" className="text-blue-600" href={`/crm/orders/${o.id}`}>{o.orderNo}</Link>, `${o.customerName} · ${o.phone}`, `${o.courier ?? ""} · ${o.shipStatus}`, rupee(o.balance),
           `${Math.floor((now - o.bookedAt!.getTime()) / DAY)}d`, `${quiet(o)}d`, <a key="c" className="btn btn-sm" href={`tel:${o.phone}`}>Call</a>,
         ])} />
       </Section>
 
-      <Section title="🚚 Courier Scorecard" right={<div className="flex gap-1">{[30, 90, 180].map((d) => <Link key={d} className={`btn btn-sm ${sc === d ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/shiprocket", sp, { sc: String(d) })}>{d} din</Link>)}</div>}>
+      <Section title="🚚 Courier Scorecard" right={<div className="flex gap-1">{[30, 90, 180].map((d) => <Link key={d} className={`btn btn-sm ${sc === d ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/shiprocket", sp, { sc: String(d) })}>{d} din</Link>)}</div>}>
         <Table head={["Courier", "Booked", "Delivered", "RTO", "RTO %", "NDR %", "Avg din", "COD doobi"]} rows={[...cm.entries()].sort((a, b) => b[1].b - a[1].b).map(([k, a]) => [
           k, a.b, a.d, a.rto, `${a.b ? ((a.rto / a.b) * 100).toFixed(1) : 0}%`, `${a.b ? ((a.ndr / a.b) * 100).toFixed(1) : 0}%`,
           a.days.length ? (a.days.reduce((x, y) => x + y, 0) / a.days.length).toFixed(1) : "-", rupee(a.lost),
