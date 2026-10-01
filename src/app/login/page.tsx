@@ -21,7 +21,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-green-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-200 p-4">
       <form onSubmit={submit} className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-800">
         <h1 className="text-xl font-bold">CRM Login</h1>
         <p className="mb-5 text-sm text-slate-500">Email / username aur password daalein</p>
