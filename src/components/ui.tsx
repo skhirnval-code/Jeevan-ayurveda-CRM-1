@@ -54,7 +54,7 @@ export function RangeLinks({ base, sp, keyName = "range", options, withCustom = 
     <div className="flex flex-wrap items-center gap-2">
       {options.map((o) => (
         <Link key={o.key} href={qs(base, sp, { [keyName]: o.key, from: null, to: null, page: null })}
-          className={`btn btn-sm ${cur === o.key ? "!border-slate-900 !bg-slate-900 !text-white" : ""}`}>{o.label}</Link>
+          className={`btn btn-sm ${cur === o.key ? "!border-blue-600 !bg-blue-600 !text-white" : ""}`}>{o.label}</Link>
       ))}
       {withCustom && (
         <form className="flex items-center gap-1" action={base}>
@@ -100,7 +100,7 @@ export function Bar({ label, value, max, right }: { label: string; value: number
   return (
     <div className="mb-2">
       <div className="flex justify-between text-sm"><span>{label}</span><span className="font-semibold">{right ?? value}</span></div>
-      <div className="h-2 rounded bg-slate-100 dark:bg-slate-700"><div className="h-2 rounded bg-green-600" style={{ width: `${w}%` }} /></div>
+      <div className="h-2 rounded bg-slate-100 dark:bg-slate-700"><div className="h-2 rounded bg-blue-600" style={{ width: `${w}%` }} /></div>
     </div>
   );
 }

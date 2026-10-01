@@ -39,46 +39,46 @@ export default function Shell({ brand, user, nav, children }: {
 
   return (
     <div className="min-h-screen">
-      <header className={`no-print sticky top-0 z-30 flex h-14 items-center gap-3 bg-slate-900 px-4 text-white shadow ${pinned ? "lg:pl-[19rem]" : ""}`}>
+      <header className={`no-print sticky top-0 z-30 flex h-14 items-center gap-3 bg-blue-700 px-4 text-white shadow ${pinned ? "lg:pl-[19rem]" : ""}`}>
         <button aria-label="Open menu" onClick={() => setOpen(true)} className={`text-2xl leading-none ${pinned ? "lg:hidden" : ""}`}>☰</button>
         <span className="font-bold">{brand} CRM</span>
       </header>
 
       {open && <div className={`no-print fixed inset-0 z-40 bg-black/40 ${pinned ? "lg:hidden" : ""}`} onClick={() => setOpen(false)} />}
-      <aside className={`no-print fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-slate-900 text-slate-200 transition-transform ${open ? "translate-x-0" : "-translate-x-full"} ${pinned ? "lg:translate-x-0" : ""}`}>
+      <aside className={`no-print fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-blue-100 bg-white text-slate-700 shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 transition-transform ${open ? "translate-x-0" : "-translate-x-full"} ${pinned ? "lg:translate-x-0" : ""}`}>
         <div className="flex items-center justify-between p-4">
-          <div><div className="text-lg font-bold text-white">{brand}</div><div className="text-xs text-green-400">CRM - Pure Ayurveda</div></div>
+          <div><div className="text-lg font-bold text-blue-800 dark:text-white">{brand}</div><div className="text-xs text-blue-500">CRM - Pure Ayurveda</div></div>
           <div className="flex items-center gap-2">
-            <button aria-label={pinned ? "Unpin sidebar" : "Pin sidebar"} title={pinned ? "Unpin" : "Pin"} onClick={togglePin} className={`hidden rounded-lg px-2 py-1 text-base lg:block ${pinned ? "bg-green-700 text-white" : "hover:bg-slate-800"}`}>📌</button>
+            <button aria-label={pinned ? "Unpin sidebar" : "Pin sidebar"} title={pinned ? "Unpin" : "Pin"} onClick={togglePin} className={`hidden rounded-lg px-2 py-1 text-base lg:block ${pinned ? "bg-blue-600 text-white" : "hover:bg-blue-50 dark:hover:bg-slate-800"}`}>📌</button>
             <button aria-label="Close menu" onClick={() => setOpen(false)} className={`text-xl ${pinned ? "lg:hidden" : ""}`}>✕</button>
           </div>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto px-3">
           {nav.map((it) => it.children ? (
             <div key={it.label}>
-              <button onClick={() => setDealerOpen(!dealerOpen)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-slate-800">
+              <button onClick={() => setDealerOpen(!dealerOpen)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-blue-50 dark:hover:bg-slate-800">
                 <span>{it.icon}</span><span className="flex-1">{it.label}</span><span>{dealerOpen ? "▾" : "›"}</span>
               </button>
-              {dealerOpen && <div className="ml-8 space-y-1 border-l border-slate-700 pl-2">
+              {dealerOpen && <div className="ml-8 space-y-1 border-l border-blue-200 pl-2 dark:border-slate-700">
                 {it.children.map((c) => (
-                  <Link key={c.href} href={c.href} className={`block rounded-lg px-3 py-2 text-sm hover:bg-slate-800 ${path === c.href ? "bg-slate-800 text-white" : ""}`}>{c.label}</Link>
+                  <Link key={c.href} href={c.href} className={`block rounded-lg px-3 py-2 text-sm hover:bg-blue-50 dark:hover:bg-slate-800 ${path === c.href ? "bg-blue-100 font-semibold text-blue-700 dark:bg-slate-800 dark:text-white" : ""}`}>{c.label}</Link>
                 ))}
               </div>}
             </div>
           ) : (
-            <Link key={it.href} href={it.href!} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-800 ${active(it.href!) ? "border-l-4 border-green-500 bg-slate-800 font-semibold text-white" : ""}`}>
+            <Link key={it.href} href={it.href!} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-800 ${active(it.href!) ? "border-l-4 border-blue-600 bg-blue-100 font-semibold text-blue-700 dark:bg-slate-800 dark:text-white" : ""}`}>
               <span>{it.icon}</span>{it.label}
             </Link>
           ))}
         </nav>
-        <div className="space-y-2 border-t border-slate-800 p-3">
+        <div className="space-y-2 border-t border-blue-100 p-3 dark:border-slate-800">
           <div className="flex items-center gap-3 px-1 py-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-600 font-bold text-white">{user.name[0]?.toUpperCase()}</div>
-            <div><div className="font-semibold text-white">{user.name}</div><div className="text-xs text-green-400">{user.role}</div></div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 font-bold text-white">{user.name[0]?.toUpperCase()}</div>
+            <div><div className="font-semibold text-slate-800 dark:text-white">{user.name}</div><div className="text-xs text-blue-500">{user.role}</div></div>
           </div>
-          <button onClick={toggleDark} className="w-full rounded-lg bg-slate-800 py-2 text-sm">{dark ? "☀️ Light Mode" : "🌙 Dark Mode"}</button>
-          <button onClick={() => setPwOpen(true)} className="w-full rounded-lg bg-slate-800 py-2 text-sm">🔑 Change Password</button>
-          <button onClick={signOut} className="w-full rounded-lg bg-slate-800 py-2 text-sm text-red-300">Sign Out</button>
+          <button onClick={toggleDark} className="w-full rounded-lg bg-blue-50 py-2 text-sm text-blue-700 hover:bg-blue-100 dark:bg-slate-800 dark:text-slate-200">{dark ? "☀️ Light Mode" : "🌙 Dark Mode"}</button>
+          <button onClick={() => setPwOpen(true)} className="w-full rounded-lg bg-blue-50 py-2 text-sm text-blue-700 hover:bg-blue-100 dark:bg-slate-800 dark:text-slate-200">🔑 Change Password</button>
+          <button onClick={signOut} className="w-full rounded-lg bg-red-50 py-2 text-sm text-red-600 dark:bg-slate-800 dark:text-red-300">Sign Out</button>
         </div>
       </aside>
 

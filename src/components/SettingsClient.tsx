@@ -28,7 +28,7 @@ export default function SettingsClient() {
     <div>
       <h1 className="text-2xl font-bold">Settings - CRM Control Center</h1>
       <p className="mb-4 text-sm text-slate-500">Bina developer ke badalne yogya sabhi configuration yahin se. (Sirf SUPER_ADMIN)</p>
-      <div className="mb-4 flex flex-wrap gap-2">{TABS.map((t) => <button key={t} onClick={() => setTab(t)} className={`btn ${tab === t ? "!bg-slate-900 !text-white" : ""}`}>{t}</button>)}</div>
+      <div className="mb-4 flex flex-wrap gap-2">{TABS.map((t) => <button key={t} onClick={() => setTab(t)} className={`btn ${tab === t ? "!bg-blue-600 !text-white" : ""}`}>{t}</button>)}</div>
       {err && <div className="card text-red-600">{err}</div>}
       {!d ? <div className="card">Load ho raha hai...</div> : (
         <>

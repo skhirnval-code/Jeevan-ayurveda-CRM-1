@@ -71,9 +71,9 @@ export function DocCentre({ carrier }: { carrier: "SHIPROCKET" | "INDIAPOST" }) 
   }
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-1">{R.map(([k, l]) => <button key={k} className={`btn btn-sm ${range === k ? "!bg-slate-900 !text-white" : ""}`} onClick={() => setRange(k)}>{l}</button>)}
+      <div className="flex flex-wrap gap-1">{R.map(([k, l]) => <button key={k} className={`btn btn-sm ${range === k ? "!bg-blue-600 !text-white" : ""}`} onClick={() => setRange(k)}>{l}</button>)}
         {range === "custom" && <><input type="date" className="input !w-auto !py-1" value={from} onChange={(e) => setFrom(e.target.value)} /><input type="date" className="input !w-auto !py-1" value={to} onChange={(e) => setTo(e.target.value)} /></>}</div>
-      <div className="flex flex-wrap gap-1">{[["pending", "Jo baaki hain"], ["done", carrier === "SHIPROCKET" ? "Jo nikal chuke" : "Jo chhap chuke"], ["both", "Dono"]].map(([k, l]) => <button key={k} className={`btn btn-sm ${which === k ? "!bg-slate-900 !text-white" : ""}`} onClick={() => setWhich(k)}>{l}</button>)}</div>
+      <div className="flex flex-wrap gap-1">{[["pending", "Jo baaki hain"], ["done", carrier === "SHIPROCKET" ? "Jo nikal chuke" : "Jo chhap chuke"], ["both", "Dono"]].map(([k, l]) => <button key={k} className={`btn btn-sm ${which === k ? "!bg-blue-600 !text-white" : ""}`} onClick={() => setWhich(k)}>{l}</button>)}</div>
       <div className="flex flex-wrap gap-2">
         {carrier === "SHIPROCKET" ? <>
           <button className="btn-primary" disabled={busy} onClick={() => go("label")}>🖨 Labels nikalein</button>
