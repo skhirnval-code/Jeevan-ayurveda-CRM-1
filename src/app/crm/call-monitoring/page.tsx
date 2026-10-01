@@ -88,7 +88,7 @@ export default async function CallMonitoring({ searchParams: sp }: { searchParam
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-6">
         {stats.map(([l, v]) => <div key={l} className="card !p-3"><div className="text-xl font-bold">{v}</div><div className="text-xs text-slate-500">{l}</div></div>)}
       </div>
-      <div className="flex flex-wrap gap-2">{TABS.map(([k, l]) => <Link key={k} href={qs("/crm/call-monitoring", sp, { tab: k })} className={`btn btn-sm ${tab === k ? "!bg-slate-900 !text-white" : ""}`}>{l}</Link>)}</div>
+      <div className="flex flex-wrap gap-2">{TABS.map(([k, l]) => <Link key={k} href={qs("/crm/call-monitoring", sp, { tab: k })} className={`btn btn-sm ${tab === k ? "!bg-blue-600 !text-white" : ""}`}>{l}</Link>)}</div>
       <Section title="Call ke baad agent ne kya status lagaya" right={<span className="text-xs text-slate-500">call katne ke 10 min ke andar, usi agent ne</span>}>
         <div className="flex flex-wrap gap-2">{[...after.entries()].sort((a, b) => b[1].n - a[1].n).map(([k, a]) => <div key={k} className="rounded-lg bg-slate-50 px-3 py-2 text-sm dark:bg-slate-900"><b>{a.n}</b> {k} <span className="text-xs text-slate-500">({a.talked} me baat hui)</span></div>)}</div>
       </Section>
