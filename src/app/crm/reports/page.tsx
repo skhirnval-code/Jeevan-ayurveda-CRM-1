@@ -77,8 +77,8 @@ export default async function Reports({ searchParams: sp }: { searchParams: SP }
 
       <Section title="📡 Live Status Board" right={
         <div className="flex gap-2">
-          <Link className={`btn btn-sm ${lb === "today" ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/reports", sp, { lb: "today" })}>Aaj</Link>
-          <Link className={`btn btn-sm ${lb === "yest" ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/reports", sp, { lb: "yest" })}>Kal</Link>
+          <Link className={`btn btn-sm ${lb === "today" ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/reports", sp, { lb: "today" })}>Aaj</Link>
+          <Link className={`btn btn-sm ${lb === "yest" ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/reports", sp, { lb: "yest" })}>Kal</Link>
           <form action="/crm/reports" className="flex gap-1">{Object.entries(sp).filter(([k]) => k !== "lb").map(([k, v]) => <input key={k} type="hidden" name={k} value={String(v ?? "")} />)}
             <input type="date" name="lb" defaultValue={toYMD(day)} className="input !w-auto !py-1" /><button className="btn btn-sm">Taaza karein</button></form>
         </div>
