@@ -23,7 +23,7 @@ export default async function Ledger({ searchParams: sp }: { searchParams: SP })
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div><div className="text-xs font-bold text-green-700">{BRAND.toUpperCase()}</div><h1 className="text-2xl font-bold">Dealer Ledger</h1><p className="text-sm text-slate-500">Sale, payment, debit, credit and running balance in one report.</p></div>
+        <div><div className="text-xs font-bold text-blue-700">{BRAND.toUpperCase()}</div><h1 className="text-2xl font-bold">Dealer Ledger</h1><p className="text-sm text-slate-500">Sale, payment, debit, credit and running balance in one report.</p></div>
         <div className="flex gap-2">
           {dealerId && <a className="btn" href={`/api/dealers/ledger?${new URLSearchParams({ dealer: dealerId, range: rk, from: sp1(sp, "from") || "", to: sp1(sp, "to") || "" })}`}>Export to Excel</a>}
           {me.role !== "DEALER" && <AddPayment dealers={dealers} dealerId={dealerId} />}
@@ -36,7 +36,7 @@ export default async function Ledger({ searchParams: sp }: { searchParams: SP })
         <Stat label="NET BALANCE" value={rupee(L?.balance)} sub="Running balance" tone="red" />
       </div>
       <form className="card flex flex-wrap items-end gap-2" action="/crm/dealers/ledger">
-        <div className="flex gap-1">{[["today", "Today"], ["all", "All Dates"], ["custom", "Custom"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${rk === k ? "!bg-slate-900 !text-white" : ""}`} href={qs("/crm/dealers/ledger", sp, { range: k })}>{l}</Link>)}</div>
+        <div className="flex gap-1">{[["today", "Today"], ["all", "All Dates"], ["custom", "Custom"]].map(([k, l]) => <Link key={k} className={`btn btn-sm ${rk === k ? "!bg-blue-600 !text-white" : ""}`} href={qs("/crm/dealers/ledger", sp, { range: k })}>{l}</Link>)}</div>
         <input type="hidden" name="range" value={rk === "all" || rk === "today" ? rk : "custom"} />
         <div><label className="label">Dealer Code</label><select name="dealer" defaultValue={dealerId} className="input !w-72"><option value="">-- Select Dealer --</option>{dealers.map((x) => <option key={x.id} value={x.id}>{x.name} ({x.code})</option>)}</select></div>
         <div><label className="label">From Date</label><input type="date" name="from" defaultValue={sp1(sp, "from")} className="input" /></div>
