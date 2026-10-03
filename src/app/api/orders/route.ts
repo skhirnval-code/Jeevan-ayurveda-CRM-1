@@ -77,6 +77,13 @@ export const POST = handle(async (req: Request) => {
   const dealerId = can(me, "orders.assignDealer") && b.dealerId ? num(b.dealerId) : null;
   const dealer = dealerId ? await prisma.dealer.findUnique({ where: { id: dealerId } }) : null;
 
+  // Duplicate guard: same number + product ka order pichle 60 sec me bana hai to naya mat banao, wahi lauta do
+  const dup = await prisma.order.findFirst({
+    where: { phone, deletedAt: null, product: str(b.product) || "Other", createdAt: { gte: new Date(Date.now() - 60_000) } },
+    orderBy: { id: "desc" },
+  });
+  if (dup) return ok(dup, 200);
+
   const data: Prisma.OrderUncheckedCreateInput = {
     orderNo: await nextOrderNo(), customerName: name, phone,
     altPhone: str(b.altPhone), email: str(b.email), product: str(b.product) || "Other", extra: str(b.extra),
