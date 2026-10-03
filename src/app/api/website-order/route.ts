@@ -18,7 +18,7 @@ const PLANS: Record<string, { label: string; qty: number; total: number }> = {
 const SOURCE = "Website";
 const PRODUCT = "Jeevan Ayurveda";
 
-function cors(origin: string | null) {
+function cors(origin: string | null): Record<string, string> {
   return origin && ALLOWED.test(origin)
     ? { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST", "Access-Control-Allow-Headers": "content-type" }
     : {};
