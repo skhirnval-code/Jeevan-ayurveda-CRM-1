@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { api, canM, useMeta } from "@/components/useMeta";
 import BookModal from "./BookModal";
 
@@ -29,6 +29,7 @@ export default function OrderForm({ id }: { id?: number }) {
   const [full, setFull] = useState<Full | null>(null);
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false); // double-click / baar-baar Save se duplicate order na bane
   const [note, setNote] = useState("");
   const [book, setBook] = useState<"SHIPROCKET" | "INDIAPOST" | null>(null);
 
@@ -53,14 +54,23 @@ export default function OrderForm({ id }: { id?: number }) {
   const balance = Math.max(0, total - (+f.online || 0));
   const districts = meta?.states.find((s) => s.name === f.state)?.districts ?? [];
 
+  // Save ke baad automatic wapas (orders list / pichla page) — naye aur purane dono order me
+  function goBack() {
+    if (window.history.length > 1) router.back();
+    else router.replace("/crm/orders");
+  }
   async function save() {
-    setBusy(true); setMsg("");
+    if (saving.current) return; // pehla save chal raha hai — dobara click ignore
+    saving.current = true; setBusy(true); setMsg("");
     const body = { ...f, product: f.product === "__other" ? f.productOther : f.product, total: f.total || autoTotal };
     try {
-      if (id) { await api(`/api/orders/${id}`, "PUT", body); setMsg("Save ho gaya ✓"); load(); }
-      else { const o = await api<{ id: number }>("/api/orders", "POST", body); router.replace(`/crm/orders/${o.id}`); }
+      if (id) await api(`/api/orders/${id}`, "PUT", body);
+      else await api<{ id: number }>("/api/orders", "POST", body);
+      setMsg("Save ho gaya ✓ — wapas ja rahe hain...");
+      goBack();
+      return; // button disabled hi rahe jab tak page badle
     } catch (e) { setMsg((e as Error).message); }
-    setBusy(false);
+    saving.current = false; setBusy(false);
   }
   async function del() {
     if (!id || !confirm("Order delete karein?")) return;
@@ -95,7 +105,7 @@ export default function OrderForm({ id }: { id?: number }) {
           <a className="btn !bg-teal-500 !text-white" target="_blank" href={`https://www.google.com/maps/search/${encodeURIComponent(`${f.address} ${f.city} ${f.state} ${f.pincode}`)}`}>Locate on Map</a>
           {id && <a className="btn !bg-violet-500 !text-white" target="_blank" href={`/crm/orders/${id}/invoice`}>Invoice</a>}
           {id && canM(meta, "orders.delete") && <button className="btn-red" onClick={del}>Delete</button>}
-          <button className="btn-primary" disabled={busy} onClick={save}>{busy ? "..." : "Save"}</button>
+          <button className="btn-primary" disabled={busy} onClick={save}>{busy ? "Saving..." : "Save"}</button>
         </div>
       </div>
       {full && <div className="mb-3 text-sm">Sources: <span className="rounded bg-slate-200 px-2 py-0.5 text-xs font-semibold dark:bg-slate-700">{f.source}</span></div>}
