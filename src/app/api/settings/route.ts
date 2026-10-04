@@ -11,7 +11,7 @@ export const GET = handle(async () => {
     prisma.storeMapping.findMany({ include: { source: true } }),
     prisma.statusMaster.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.followupRule.findMany({ orderBy: { status: "asc" } }),
-    prisma.setting.findMany(),
+    prisma.setting.findMany({ where: { NOT: { key: { startsWith: "wa:" } } } }), // WhatsApp bot chats chhod kar
     prisma.order.findMany({ where: { deletedAt: { not: null } }, orderBy: { deletedAt: "desc" }, take: 200, select: { id: true, orderNo: true, customerName: true, phone: true, deletedAt: true, deletedReason: true } }),
     prisma.order.groupBy({ by: ["source"], _count: true, where: { deletedAt: null } }),
   ]);
